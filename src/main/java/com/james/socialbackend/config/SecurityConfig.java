@@ -40,8 +40,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll()
                         .requestMatchers("/posts").permitAll()
+                        .requestMatchers("/auth/followers/**", "/auth/following/**").permitAll()
                         .requestMatchers("/auth/user/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/auth/search").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/auth/follow/**", "/auth/unfollow/**").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

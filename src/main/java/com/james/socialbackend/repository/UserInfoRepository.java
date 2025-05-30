@@ -1,5 +1,6 @@
 package com.james.socialbackend.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,8 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
   boolean existsByUsername(String username);
 
   boolean existsByEmail(String email);
+
+  List<UserInfo> findByUsernameContainingIgnoreCase(String query);
+
+  List<UserInfo> findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCase(String username, String name);
 }

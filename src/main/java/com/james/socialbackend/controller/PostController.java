@@ -82,7 +82,7 @@ public class PostController {
 
     post.setCaption(request.getCaption());
     post.setImageUrl(request.getImageUrl());
-    return ResponseEntity.ok(postRepository.save(post));
+    return ResponseEntity.ok(new PostRequest(postRepository.save(post)));
   }
 
   // Delete post
@@ -91,7 +91,8 @@ public class PostController {
     UserInfo user = jwtService.getUserFromRequest(httpServletRequest);
     Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
 
-    if (post.getUser().getId() != user.getId()) {
+    // Allow admins to delete any post
+    if (!user.getRoles().equals("ROLE_ADMIN") && post.getUser().getId() != user.getId()) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to delete this post");
     }
 
